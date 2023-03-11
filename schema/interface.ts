@@ -13,3 +13,17 @@ export class Mail {
     this.content = content;
   }
 }
+
+export class Inbox {
+  id: string;
+  name: string;
+  mails: Mail[];
+  length: number;
+
+  constructor(id: string, name: string, mails: Mail[]) {
+    this.id = id;
+    this.name = name;
+    this.mails = mails;
+    this.length = mails.length;
+  }
+}
