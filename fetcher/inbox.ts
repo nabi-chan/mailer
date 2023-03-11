@@ -1,6 +1,4 @@
-import { Inbox } from "schema/interface";
-
-import { Imap } from "../utils/imap";
+import { Imap } from "utils/imap";
 
 export class InboxFetcher extends Imap {
   constructor() {
@@ -18,7 +16,15 @@ export class InboxFetcher extends Imap {
 
   public async inboxResolver(id: string) {
     // TODO
-    return new Inbox(id, id, []);
+    return {
+      id,
+      name: id,
+      mail: [],
+      count: {
+        unread: 0,
+        total: 0,
+      },
+    };
   }
 
   private async getBoxMeta() {

@@ -1,8 +1,6 @@
 import { createYoga } from "graphql-yoga";
 
-import { builder } from "schema/builder";
-
-export const schema = builder.toSchema();
+import schema from "gql";
 
 export default createYoga({
   schema,

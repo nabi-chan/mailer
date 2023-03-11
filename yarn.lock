@@ -584,6 +584,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pothos/plugin-simple-objects@npm:^3.6.7":
+  version: 3.6.7
+  resolution: "@pothos/plugin-simple-objects@npm:3.6.7"
+  peerDependencies:
+    "@pothos/core": "*"
+    graphql: ">=15.1.0"
+  checksum: 450816cb6f097075322d3753ed0147731dd5084c786800329150d07ff80fb50c98ade81883ac48f24dc10a569ecff81b13f4bf85579b5942fc97f95b44b1ab98
+  languageName: node
+  linkType: hard
+
 "@prisma/client@npm:^4.9.0":
   version: 4.9.0
   resolution: "@prisma/client@npm:4.9.0"
@@ -4161,6 +4171,7 @@ __metadata:
   resolution: "nextjs-tailwindcss-template@workspace:."
   dependencies:
     "@pothos/core": ^3.28.0
+    "@pothos/plugin-simple-objects": ^3.6.7
     "@prisma/client": ^4.9.0
     "@tailwindcss/typography": ^0.5.9
     "@types/imap": ^0.8.35
