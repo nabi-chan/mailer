@@ -20,6 +20,7 @@ export class Imap {
   async connect(): Promise<void> {
     if (this.connected) return console.log("Already connected");
     return new Promise((resolve, reject) => {
+    if (this.connected) console.log("Already connected");
       this.imap.once("ready", () => {
         this.connected = true;
         resolve();
