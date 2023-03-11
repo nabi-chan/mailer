@@ -18,26 +18,23 @@ export class Imap {
   }
 
   async connect(): Promise<void> {
-    if (this.connected) return console.log("Already connected");
-    return new Promise((resolve, reject) => {
     if (this.connected) console.log("Already connected");
+    return new Promise((resolve) => {
       this.imap.once("ready", () => {
         this.connected = true;
         resolve();
       });
-      this.imap.once("error", (err: Error) => reject(err));
       this.imap.connect();
     });
   }
 
   async disconnect(): Promise<void> {
     if (!this.connected) throw new Error("Not connected");
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.imap.once("end", () => {
         this.connected = false;
         resolve();
       });
-      this.imap.once("error", (err: Error) => reject(err));
       this.imap.end();
     });
   }
