@@ -1,3 +1,5 @@
+import { Folder } from "imap";
+
 import { InboxList } from "gql/enum";
 import { Imap } from "utils/imap";
 
@@ -6,32 +8,31 @@ export class InboxFetcher extends Imap {
     super();
   }
 
-  public async inboxesResolver() {
-    // TODO
-    return Promise.all([
-      await this.inboxResolver(InboxList.INBOX),
-      await this.inboxResolver(InboxList.SENT),
-      await this.inboxResolver(InboxList.TRASH),
-    ]);
-  }
+  // TODO: Improve speed (currently takes 3.0s)
+  async getBoxMeta(): Promise<{ [key in InboxList]: string }> {
+    function transformMailboxes(mailboxes: Record<string, Folder>): { name: string; attribs: string[] }[] {
+      return Object.entries(mailboxes).reduce((result: { name: string; attribs: string[] }[], [name, mailbox]) => {
+        return mailbox.children
+          ? [
+              ...result,
+              ...Object.entries(mailbox.children).map(([childName, childMailbox]) => {
+                return { name: `${name}/${childName}`, attribs: childMailbox.attribs };
+              }),
+            ]
+          : [...result, { name, attribs: mailbox.attribs }];
+      }, []);
+    }
 
-  public async inboxResolver(id: InboxList) {
-    // TODO
-    return {
-      id,
-      name: id,
-      mail: [],
-      count: {
-        unread: 0,
-        total: 0,
-      },
-    };
-  }
-
-  private async getBoxMeta() {
-    // TODO : getBoxes
-    // TODO : format box as { path, attribs }
-    // TODO : filter inbox, sent, trash
-    // TODO : return
+    return new Promise((resolve, reject) =>
+      this.imap.getBoxes((err, boxes) => {
+        if (err) return reject(err);
+        const inboxes = transformMailboxes(boxes);
+        resolve({
+          [InboxList.INBOX]: inboxes.find((inbox) => inbox.name === "INBOX")?.name || "unknown",
+          [InboxList.SENT]: inboxes.find((inbox) => inbox.attribs.includes("\\Sent"))?.name || "unknown",
+          [InboxList.TRASH]: inboxes.find((inbox) => inbox.attribs.includes("\\Trash"))?.name || "unknown",
+        });
+      }),
+    );
   }
 }
