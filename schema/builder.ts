@@ -1,5 +1,7 @@
 import SchemaBuilder from "@pothos/core";
 
+import { InboxFetcher } from "fetcher/inbox";
+
 import { Inbox, Mail } from "./interface";
 
 export const builder = new SchemaBuilder({});
@@ -25,6 +27,8 @@ builder.objectType(Inbox, {
   }),
 });
 
+const inbox = new InboxFetcher();
+
 builder.queryType({
   fields: (t) => ({
     hello: t.string({
@@ -39,17 +43,14 @@ builder.queryType({
     }),
     inboxes: t.field({
       type: [Inbox],
-      resolve: () => [
-        new Inbox("1", "inbox1", [new Mail("1", "me@me.com", ["you@you.com"], "Hello", "World")]),
-        new Inbox("2", "inbox2", [new Mail("2", "me@me.com", ["you@you.com"], "Hello", "World")]),
-      ],
+      resolve: () => inbox.inboxesResolver(),
     }),
     inbox: t.field({
       type: Inbox,
       args: {
         id: t.arg.string({ required: true }),
       },
-      resolve: (_, { id }) => new Inbox(id, "inbox1", [new Mail("1", "me@me.com", ["you@you.com"], "Hello", "World")]),
+      resolve: (_, { id }) => inbox.inboxResolver(id),
     }),
   }),
 });
