@@ -1,3 +1,4 @@
+import { InboxList } from "gql/enum";
 import { Imap } from "utils/imap";
 
 export class InboxFetcher extends Imap {
@@ -8,13 +9,13 @@ export class InboxFetcher extends Imap {
   public async inboxesResolver() {
     // TODO
     return Promise.all([
-      await this.inboxResolver("inbox"),
-      await this.inboxResolver("sent"),
-      await this.inboxResolver("trash"),
+      await this.inboxResolver(InboxList.INBOX),
+      await this.inboxResolver(InboxList.SENT),
+      await this.inboxResolver(InboxList.TRASH),
     ]);
   }
 
-  public async inboxResolver(id: string) {
+  public async inboxResolver(id: InboxList) {
     // TODO
     return {
       id,
