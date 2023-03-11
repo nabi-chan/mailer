@@ -14,6 +14,7 @@
   "dependencies": {
     "@pothos/core": "^3.28.0",
     "@prisma/client": "^4.9.0",
+    "@types/imap": "^0.8.35",
     "axios": "^1.2.6",
     "clsx": "^1.2.1",
     "cookies-next": "^2.1.1",
@@ -22,6 +23,7 @@
     "framer-motion": "^8.5.5",
     "graphql": "^16.6.0",
     "graphql-yoga": "^3.7.2",
+    "imap": "^0.8.19",
     "next": "^13.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
