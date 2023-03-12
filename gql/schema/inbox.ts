@@ -16,7 +16,7 @@ builder.queryField("inboxes", (t) =>
 
       return Object.entries(meta).map(([key, value]) => ({
         type: key as InboxList,
-        path: value,
+        ...value,
       }));
     },
   }),
@@ -28,11 +28,16 @@ builder.queryField("inbox", (t) =>
     args: {
       type: t.arg({ type: InboxList, required: true }),
     },
-    resolve: (_, args) => ({
-      path: "unknown",
-      name: "unknown",
-      type: args.type,
-    }),
+    resolve: async (_, args) => {
+      await inbox.connect();
+      const meta = await inbox.getBoxMeta();
+      await inbox.disconnect();
+
+      return {
+        type: args.type,
+        ...meta[args.type],
+      };
+    },
   }),
 );
 
