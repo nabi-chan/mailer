@@ -51,7 +51,12 @@ builder.objectField(Inbox, "mails", (t) =>
       subject: t.arg.string(),
       content: t.arg.string(),
     },
-    resolve: () => [],
+    resolve: async (parent) => {
+      await inbox.connect();
+      const mails = await inbox.getBoxMails(parent.path as string, 1, 10);
+      await inbox.disconnect();
+      return mails;
+    },
   }),
 );
 

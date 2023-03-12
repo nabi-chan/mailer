@@ -1,11 +1,45 @@
 import { Folder } from "imap";
+import { simpleParser } from "mailparser";
 
 import { InboxList } from "gql/enum";
+import { Mail } from "gql/interface";
 import { Imap } from "utils/imap";
 
 export class InboxFetcher extends Imap {
   constructor() {
     super();
+  }
+
+  async getBoxMails(path: string, start: number, end: number | string) {
+    return new Promise<{ messageId: string; from: string; to: string[]; subject: string; content: string }[]>(
+      (resolve, reject) => {
+        this.imap.openBox(path, true, (err, mailbox) => {
+          if (err) reject(err);
+          const f = this.imap.seq.fetch(`${start}:${end}`, {
+            bodies: [""],
+            struct: true,
+          });
+          const mails: { messageId: string; from: string; to: string[]; subject: string; content: string }[] = [];
+          f.on("message", (msg) => {
+            msg.on("body", async (stream) => {
+              simpleParser(stream, async (err, parsed) => {
+                if (err) reject(err);
+                mails.push({
+                  messageId: parsed.messageId!,
+                  from: parsed.from?.value[0].address!,
+                  to: Array.isArray(parsed.to) ? [] : parsed.to!.value.map((to) => to.address!),
+                  subject: parsed.subject!,
+                  content: parsed.html ? parsed.html! : parsed.text!,
+                });
+              });
+            });
+            f.on("end", () => {
+              resolve(mails);
+            });
+          });
+        });
+      },
+    );
   }
 
   // TODO: Improve speed (currently takes 3.0s)

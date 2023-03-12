@@ -25,6 +25,7 @@
     "graphql": "^16.6.0",
     "graphql-yoga": "^3.7.2",
     "imap": "^0.8.19",
+    "mailparser": "^3.6.4",
     "next": "^13.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
+    "@types/mailparser": "^3.4.0",
     "@types/node": "18.11.18",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
