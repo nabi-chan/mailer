@@ -1,5 +1,4 @@
 import { builder } from "./builder";
-import { InboxList } from "./enum";
 
 export const Mail = builder.simpleObject("Mail", {
   fields: (t) => ({
@@ -21,7 +20,6 @@ export const InboxCount = builder.simpleObject("InboxCount", {
 export const Inbox = builder.simpleObject("Inbox", {
   fields: (t) => ({
     path: t.id(),
-    type: t.field({ type: InboxList }),
     name: t.string(),
   }),
 });

@@ -10,14 +10,9 @@ builder.queryField("inboxes", (t) =>
   t.field({
     type: [Inbox],
     resolve: async () => {
-      await inbox.connect();
-      const meta = await inbox.getBoxMeta();
-      await inbox.disconnect();
+      const response = await inbox.getBoxMeta();
 
-      return Object.entries(meta).map(([key, value]) => ({
-        type: key as InboxList,
-        ...value,
-      }));
+      return response;
     },
   }),
 );
@@ -26,17 +21,11 @@ builder.queryField("inbox", (t) =>
   t.field({
     type: Inbox,
     args: {
-      type: t.arg({ type: InboxList, required: true }),
+      name: t.arg({ type: "String", required: true }),
     },
     resolve: async (_, args) => {
-      await inbox.connect();
-      const meta = await inbox.getBoxMeta();
-      await inbox.disconnect();
-
-      return {
-        type: args.type,
-        ...meta[args.type],
-      };
+      const response = await inbox.getBoxMeta();
+      return response.find((item) => item.name === args.name)!;
     },
   }),
 );
@@ -52,9 +41,7 @@ builder.objectField(Inbox, "mails", (t) =>
       content: t.arg.string(),
     },
     resolve: async (parent) => {
-      await inbox.connect();
       const mails = await inbox.getBoxMails(parent.path as string, 1, 10);
-      await inbox.disconnect();
       return mails;
     },
   }),
