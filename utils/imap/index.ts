@@ -14,6 +14,7 @@ export class Imap {
       port: 993,
       tls: true,
       tlsOptions: { servername: "imap.gmail.com" },
+      debug: console.log,
     });
   }
 
